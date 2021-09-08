@@ -1,1 +1,1 @@
-# hw_lesson_1
+# Homework for lesson 1
