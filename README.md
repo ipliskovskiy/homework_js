@@ -1,1 +1,1 @@
-# Homework for lesson 1
+# Homework for JS course.
