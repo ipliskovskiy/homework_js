@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Task 1</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<header><div class="container">
+    <h1> <a href=index.html>Homework from lesson №2 - TASK 1</a> </h1>
+</div></header>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-2 border-right">
+            <a href=index.html>На главную</a><br>
+        </div>
+        <div class="col-5 border-right">
+            <p>Дан код:</p>
+            <p>var a = 1, b = 1, c, d;</p>
+            <p>c = ++a; alert(c);           // 2</p>
+            <p>d = b++; alert(d);           // 1</p>
+            <p>c = (2+ ++a); alert(c);      // 5</p>
+            <p>d = (2+ b++); alert(d);      // 4</p>
+            <p>alert(a);                    // 3</p>
+            <p>alert(b);                    // 3</p>
+            <p>Почему код даёт именно такие результаты?</p>
+        </div>
+        <div class="col-5">
+            <p>Ответ:</p>
+            <p>var a = 1, b = 1, c, d;</p>
+            <p>c = ++a; alert(c);           // 2</p>
+            <p>Прединкремент - в начале a увеличиваем на единицу и потом записываем значение в "c".</p><hr>
+            <p>d = b++; alert(d);           // 1</p>
+            <p>Постинкремент в начале «b» записываем значение в «d», а после b увеличиваем на единицу.</p><hr>
+            <p>c = (2+ ++a); alert(c);      // 5</p>
+            <p>Изначально «a» = 2. Перовым делом из-за прединкремента «a» увеличивается на единицу (3), после выполняем суммирование (2 + 3). Далее сумму (5) записываем в «c». </p><hr>
+            <p>d = (2+ b++); alert(d);      // 4</p>
+            <p>Изначально «b» = 2. Перовым делом выполняем суммирование (2 + b) = 4, далее выполняем постинкремент «b». «b» увеличивается на единицу (3). Далее сумму записываем в «d». Так как мы складывали 2 и b до инкремента, мы сложили 2 + 2. «d = 4»</p><hr>
+            <p>alert(a);                    // 3</p>
+            <p>Изначально a = 1</p>
+            <p>Был один прединкремент a = 2</p>
+            <p>Далее один постинкремент a = 3</p><hr>
+            <p>alert(b);                    // 3</p>
+            <p>Изначально b = 1</p>
+            <p>Был один постинкремент b = 2</p>
+            <p>Далее один прединкремент b = 3</p>
+        </div>
+    </div>
+</div>
+</body>
+
+<footer><div class="container"></div></footer>
+</html>
