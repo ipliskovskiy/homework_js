@@ -1,118 +1,81 @@
 //После игры необходимо спросить номер вопроса. 
 //По номеру вопроса нужно вывести текст вопроса и текст выбранного ответа
 
-var event, ok;
+var countQuestion;
+var worksList = [];
+var historyGame = new Map();  
 
-//var answers = [];
 
-do {//Выводим первый вопрос
-    ok = false;
-    event = +prompt(works.a00 + works.a1 + works.a2 + '-1 - Выход из игры');
-   
-    if (event == -1) {
-        break;
-    }
-    else {
-        ok = isAnswer(works.a0, event);
-    }
-} while (!ok);
-switch (event) {
-    case 1: // Первое действие  - если в первом окне ввели 1 то открываем серию окон - окно 2
-        do {
-            ok = false;
-            event = +prompt(works.b00 + works.b1 + works.b2 + '-1 - Выход из игры');
-            if (event == -1) {
-                break;
-            }
-            else {
-                ok = isAnswer(works.b0, event);
-            }
-        } while (!ok);
-        switch (event) {
-            case 1: // Второе действие, если во 2 окне ввели 1 то переходим на 4 окно
-                do {
-                    ok = false;
-                    event = +prompt(works.d00 + works.d1 + works.d2 + '-1 - Выход из игры');
-                    if (event == -1) {
-                        break;
-                    }
-                    else {
-                        ok = isAnswer(works.d0, event);
-                    }
-                } while (!ok);
+initialize();
+gameEngine(countQuestion);
 
-                break;
-            case 2: // Второе действие   Если ввели 2 то также переходим на 4 окно
-                do {
-                    ok = false;
-                    event = +prompt(works.d00 + works.d1 + works.d2 + '-1 - Выход из игры');
-                    if (event == -1) {
-                        break;
-                    }
-                    else {
-                        ok = isAnswer(works.d0, event);
-                    }
-                } while (!ok);
 
-                break;
-            case -1: // Второе действие
-                break;
-            default:
-                alert('Ошибка');
-        }
-        break;
-    case 2: // Первое действие    Если в 1 окне ввели 2 то переходим к 3 окну
-        do {
-            ok = false;
-            event = +prompt(works.c00 + works.c1 + works.c2 + '-1 - Выход из игры');
-            if (event == -1) {
-                break;
-            }
-            else {
-                ok = isAnswer(works.c0, event);
-            }
-        } while (!ok);
-        switch (event) {
-            case 1: // Второе действие
-                do {
-                    ok = false;
-                    event = +prompt(works.d00 + works.d1 + works.d2 + '-1 - Выход из игры');
-                    if (event == -1) {
-                        break;
-                    }
-                    else {
-                        ok = isAnswer(works.d0, event);
-                    }
-                } while (!ok);
-
-                break;
-            case 2: // Второе действие
-                do {
-                    ok = false;
-                    event = +prompt(works.d00 + works.d1 + works.d2 + '-1 - Выход из игры');
-                    if (event == -1) {
-                        break;
-                    }
-                    else {
-                        ok = isAnswer(works.d0, event);
-                    }
-                } while (!ok);
-
-                break;
-            case -1: // Второе действие
-                break;
-            default:
-                alert('Ошибка');
-        }
-        break;
-    case -1: // Первое действие
-        break;
-    default:
-        alert('Ошибка');
+function initialize(){
+    worksList = Object.keys(works);
+    countQuestion = worksList[worksList.length - 1 ][0].charCodeAt(0) - 96;
 }
-alert('Спасибо за игру');
 
-//------------------------------------------
+
+function buildWindow(windowNumber) {
+    var answerType = String.fromCharCode(96 + windowNumber);
+    var window = works[answerType + '00'];
+    for (var i = 1; i <=  works[answerType + '0']; i++) {
+        window += works[answerType + i];
+    }
+    window += '-1 - Выход из игры';
+    return [window, works[answerType + '0']];
+}
+
+
+function askAnswer(window, countAnswer) {
+    do{
+        var ok = false;
+        event = +prompt(window);
+        if (event == -1) {
+            break;
+        }
+        else {
+            ok = isAnswer(countAnswer, event);
+        }
+    } while (!ok);
+    return event;
+}
+
+
+function gameEngine(countQuestion) {
+    var window, countAnswer, event;
+    for (var i = 1; i <= countQuestion; i++) {
+        var fullwindow = buildWindow(i);
+        window = fullwindow[0];
+        countAnswer = fullwindow[1];
+        event = askAnswer(window, countAnswer);
+        saveAnswer(i, event);
+        if (event == -1) {
+            break;
+        }
+        if ((event > 1) && (i != countQuestion - 1)) {
+            i += event - 1;
+        }
+    }
+    alert('Спасибо за игру');
+    window = 'В вашей игре ' + historyGame.size + ' окон.\nКакое окно вы хотите увидеть?\n-1 для выхода.';
+    event = askAnswer(window, historyGame.length);
+    if (event != -1) { 
+        var i = 1;
+        for (var pair of historyGame.entries()){ // Грязно не смог найти как получить MAP по ID.
+            if (i == event){
+                window = buildWindow(pair[0]);
+                window += '\nВаш ответ: ' + pair[1];
+                alert(window);
+                break;
+            }
+            i++
+        }
+    }
+
+}
+
+
 function isAnswer(q, event) {
     if (isNaN(event) || !isFinite(event)) {
         alert('Вы ввели недопустимый символ');
@@ -123,6 +86,11 @@ function isAnswer(q, event) {
         return false;
     }
 	return true;
-    
 }
 
+
+function saveAnswer(number, event) {
+    console.log(number + ' ' + event + ' , ' + historyGame);
+    historyGame.set(number, event);
+    console.log(historyGame);
+}
