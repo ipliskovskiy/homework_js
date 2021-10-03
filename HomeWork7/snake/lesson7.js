@@ -8,6 +8,9 @@ var gameIsRunning = false; // Запущена ли игра
 var snake_timer; // Таймер змейки
 var food_timer; // Таймер для еды
 var score = 0; // Результат
+var countRegenerateBomb = 1; // через сколько съеденной еды добавляем бомбочку
+var maxBomb = 5; // максимальное количество бомбочек
+var bombs = [];
 
 function init() {
     prepareGameField(); // Генерация поля
@@ -70,7 +73,8 @@ function startGame() {
     respawn();//создали змейку
 
     snake_timer = setInterval(move, SNAKE_SPEED);//каждые 200мс запускаем функцию move
-    setTimeout(createFood, 5000);
+    // setTimeout(createFood, 5000);
+    setTimeout(createUnit("food"), 5000);
 }
 
 /**
@@ -133,7 +137,7 @@ function move() {
         snake.push(new_unit);
 
         // Проверяем, надо ли убрать хвост
-        if (!haveFood(new_unit)) {
+        if (!haveFoodBomb(new_unit)) {
             // Находим хвост
             var removed = snake.splice(0, 1)[0];
             var classes = removed.getAttribute('class').split(' ');
@@ -161,11 +165,11 @@ function isSnakeUnit(unit) {
     return check;
 }
 /**
- * проверка на еду
+ * проверка
  * @param unit
  * @returns {boolean}
  */
-function haveFood(unit) {
+function haveFoodBomb(unit) {
     var check = false;
 
     var unit_classes = unit.getAttribute('class').split(' ');
@@ -173,37 +177,60 @@ function haveFood(unit) {
     // Если еда
     if (unit_classes.includes('food-unit')) {
         check = true;
-        createFood();
+        // createFood();
+        createUnit("food");
         score++;
         document.getElementById('counter').innerText = "Ваш счет: " + score;
+        if (score % countRegenerateBomb == 0 && score / countRegenerateBomb <= maxBomb){
+            regenerateBomb(score / countRegenerateBomb);
+        } else if (score % countRegenerateBomb == 0){
+            regenerateBomb(maxBomb);
+        }
         
+    } else if (unit_classes.includes('bomb-unit')) {
+        finishTheGame();
     }
     return check;
 }
 
+function regenerateBomb(count) {
+    for (var cell of bombs){
+        var bomb = document.getElementsByClassName(cell)[0];
+        var unit_cell_classes = bomb.getAttribute('class').split(' ');
+        bomb.setAttribute('class', unit_cell_classes[0] + ' ' + unit_cell_classes[1]);
+    }
+    for (var i = 0; i < count; i++){
+        createUnit("bomb");
+    }
+}
+
 /**
- * Создание еды
+ * Создание еды или бомбочки
  */
-function createFood() {
-    var foodCreated = false;
+function createUnit(unitType) {
+    var unitCreated = false;
 
-    while (!foodCreated) { //пока еду не создали
-        // рандом
-        var food_x = Math.floor(Math.random() * FIELD_SIZE_X);
-        var food_y = Math.floor(Math.random() * FIELD_SIZE_Y);
+    while (!unitCreated) {
+        var unit_x = Math.floor(Math.random() * FIELD_SIZE_X);
+        var unit_y = Math.floor(Math.random() * FIELD_SIZE_Y);
 
-        var food_cell = document.getElementsByClassName('cell-' + food_y + '-' + food_x)[0];
-        var food_cell_classes = food_cell.getAttribute('class').split(' ');
+        var unit_cell = document.getElementsByClassName('cell-' + unit_y + '-' + unit_x)[0];
+        var unit_cell_classes = unit_cell.getAttribute('class').split(' ');
 
-        // проверка на змейку
-        if (!food_cell_classes.includes('snake-unit')) {
+        if (!unit_cell_classes.includes('snake-unit') && !unit_cell_classes.includes('bomb-unit') && !unit_cell_classes.includes('food-unit')) {
             var classes = '';
-            for (var i = 0; i < food_cell_classes.length; i++) {
-                classes += food_cell_classes[i] + ' ';
+            for (var i = 0; i < unit_cell_classes.length; i++) {
+                classes += unit_cell_classes[i] + ' ';
             }
 
-            food_cell.setAttribute('class', classes + 'food-unit');
-            foodCreated = true;
+            if (unitType == 'food') {
+                unit_cell.setAttribute('class', classes + 'food-unit');
+                unitCreated = true;
+            } else {
+                unit_cell.setAttribute('class', classes + 'bomb-unit');
+                bombs.push('cell-' + unit_y + '-' + unit_x);
+                unitCreated = true;
+            }
         }
     }
 }
