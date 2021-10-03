@@ -74,7 +74,7 @@ function startGame() {
 
     snake_timer = setInterval(move, SNAKE_SPEED);//каждые 200мс запускаем функцию move
     // setTimeout(createFood, 5000);
-    setTimeout(createUnit("food"), 5000);
+    setTimeout(createUnit, 5000);
 }
 
 /**
@@ -207,7 +207,7 @@ function regenerateBomb(count) {
 /**
  * Создание еды или бомбочки
  */
-function createUnit(unitType) {
+function createUnit(unitType="food") {
     var unitCreated = false;
 
     while (!unitCreated) {
