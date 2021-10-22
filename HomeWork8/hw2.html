@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <meta charset="utf-8">
+    <title>Task 2</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+    <header><div class="container">
+        <h1> <a href=index.html>Homework from lesson №8</a> </h1>
+    </div></header>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-2 border-right">
+                    <a href=index.html>На главную</a><br>
+                </div>
+                <div class="col-3 border-right">
+                    <p>Не выполняя кода, ответить, что выведет браузер и почему:</p>
+                    <div>
+                    if (!("a" in window)) {<br>
+                    &nbspvar a = 1;<br>
+                    }<br>
+                    alert(a);<br>
+                    </div><br>
+                    <div>
+                    var b = function a(x) {<br>
+                    &nbspx && a(--x);<br>
+                    };<br>
+                    alert(a);<br>
+                    </div><br>
+                    <div>
+                    function a(x) {<br>
+                    &nbspreturn x * 2;<br>
+                    }<br>
+                    var a;<br>
+                    alert(a);<br>
+                    </div><br>
+
+                    <div>
+                    function b(x, y, a) {<br>
+                    &nbsparguments[2] = 10;<br>
+                    &nbspalert(a);<br>
+                    }<br>
+                    b(1, 2, 3);<br>
+                    </div><br>
+                    <div>
+                    function a() {<br>
+                    &nbspalert(this);<br>
+                    }<br>
+                    a.call(null);<br>
+                    </div>
+                </div>
+                <div class="col">
+                    Первые три команды alert выведут код функции:<br>
+                    function a() {<br>
+                    &nbspalert(this);<br>
+                    }<br>
+                    Вывод произойдет, потому-что мы не указали "()" тоесть не вызываем функцию. 
+                    Так же при вызове или выводе "a" - мы не выведем/вызовем и эту функцию:<br>
+                    function a(x) {<br>
+                        &nbspreturn x * 2;<br>
+                    }<br>
+                    Первая функция в коде, указана a(x), вторая функция в коде a(). 
+                    JS последовательно загружает все функции сверзу вниз. Так как в JS нет перегрузки, 
+                    JS переопредели первую загруженныую функцию a(x) как на a(); 
+                    Так же у нас есть var объявляющий переменную a, но не инициализирующую ее. 
+                    Значение в переменной a не меняется.<br>
+                    <br>
+                    b - обявлена выше как глобальная переменная и присвоенна ей функция a()<br>
+                    b(1,2,3) - при вызове отправит в функцию:<br>
+                    var b = function a(x) {<br>
+                        &nbsp x && a(--x);<br>
+                    };<br>
+                    Три аргумента, но работать она будет только с одним. Функция ничего не выводит. Ее вызов произойдет два раза, так как присутсвует рекурския с хвостовым условием.
+                    <br>
+                    <br>
+                    a.call(null) = a.call() = a.call(this) - По умолчанию объект window.
+                    Вывод будет [object Window]
+
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <footer><div class="container"></div></footer>
+</html>
